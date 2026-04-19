@@ -22,5 +22,11 @@ Route::middleware(['auth'])->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::resource('tasks', TaskController::class)->middleware('auth');
-Route::patch('tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle')->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::get('tasks/trashed', [TaskController::class, 'trashed'])->name('tasks.trashed');
+    Route::patch('tasks/{task}/restore', [TaskController::class, 'restore'])->name('tasks.restore');
+    Route::delete('tasks/{task}/force-delete', [TaskController::class, 'forceDelete'])->name('tasks.forceDelete');
+    Route::patch('tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+    Route::resource('tasks', TaskController::class);  
+});
